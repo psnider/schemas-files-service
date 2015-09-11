@@ -1,0 +1,49 @@
+{
+    "version": "1.5.3",
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": true,
+        "noLib": false,
+        "noEmit": true
+    },
+    "scripts": {
+        "postbuild": "echo after building"
+    },
+    "formatCodeOptions": {
+        "indentSize": 4,
+        "tabSize": 4,
+        "newLineCharacter": "\n",
+        "convertTabsToSpaces": true,
+        "insertSpaceAfterCommaDelimiter": true,
+        "insertSpaceAfterSemicolonInForStatements": true,
+        "insertSpaceBeforeAndAfterBinaryOperators": true,
+        "insertSpaceAfterKeywordsInControlFlowStatements": true,
+        "insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+        "insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
+        "placeOpenBraceOnNewLineForFunctions": false,
+        "placeOpenBraceOnNewLineForControlBlocks": false
+    },
+    "filesGlob": [
+        "./src/ts/*.ts",
+        "./test/src/ts/*.ts",
+        "./typings/*/*.d.ts"
+    ],
+    "files": [
+        "./src/ts/schemas-api.ts",
+        "./src/ts/schemas-plugin.ts",
+        "./test/src/ts/schemas-service.tests.ts",
+        "./typings/assertion-error/assertion-error.d.ts",
+        "./typings/chai/chai.d.ts",
+        "./typings/es6-promise/es6-promise.d.ts",
+        "./typings/mocha/mocha.d.ts",
+        "./typings/node/node.d.ts",
+        "./typings/schemas-service/schemas-plugin.d.ts",
+        "./typings/schemas-service/schemas-protocol.d.ts",
+        "./typings/tv4-via-typenames-node/tv4-via-typenames-node.d.ts",
+        "./typings/tv4-via-typenames/tv4-via-typenames.d.ts",
+        "./typings/tv4/tv4.d.ts"
+    ]
+}
