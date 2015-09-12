@@ -14,57 +14,78 @@ const expect                = CHAI.expect;
 
 describe('schemas-service', function() {
 
+    var seneca;
+
+
+    before(function(done) {
+        //draftV4Pathname
+        seneca = require('seneca')({
+            log: 'silent',
+            default_plugins:{
+                'mem-store':false
+            },
+            schemas: {
+                schemasDir: 'test/data/schemas'
+            }
+        });
+        var schemas_plugin = require('schemas-plugin')
+        seneca.use(schemas_plugin);
+        seneca.error((error) => {
+            done(error)
+        })
+        done();
+    });
+
+
     describe('schemas-plugin', function() {
 
-        var seneca;
-
-
-        function readSchema(typename: string, done: (error?: Error, response?: SchemasProtocol.SchemasResponse) => void)  {
-            let read_msg: SchemasProtocol.SchemasRequest = {
+        function readSchema(typename: string, done: (error?: Error) => void, tests: (response) => void)  {
+            let read_msg = {
                 action: 'read',
-                typename: typename,
+                role: 'schemas'
             };
-            read_msg['role'] = 'schemas';
-            seneca.act(read_msg, (error, read_schema) => {
+            if (typename) read_msg['typename'] = typename;
+            //console.log('read_msg=' + JSON.stringify(read_msg))
+            seneca.act(read_msg, (error, response) => {
                 //console.log('read_schema='+JSON.stringify(read_schema))
-                done(error, read_schema);
+                if (error) {
+                    done(error);
+                } else {
+                    //console.log('response=' + JSON.stringify(response))
+                    tests(response);
+                    done();
+                }
             });
         }
 
 
-        beforeEach(function(done) {
-            //draftV4Pathname
-            seneca = require('seneca')({
-                log: 'silent',
-                default_plugins:{
-                    'mem-store':false
-                },
-                schemas: {
-                    schemasDir: 'test/data/schemas'
-                }
-            });
-            var schemas_plugin = require('schemas-plugin')
-            seneca.use(schemas_plugin);
-            seneca.error((error) => {
-                done(error)
-            })
-            done();
-        });
-
-
         describe('action:read', function() {
 
-            it('+ should read a schema', function(done) {
+            it('should return a schema when the typename references a cached schema', function(done) {
                 let typename = 'SHA1'
-                readSchema(typename, (error, read_schema) => {
-                    if (error) {
-                        done(error);
-                    } else {
-                        console.log('read_schema=' + JSON.stringify(read_schema))
-                        expect(read_schema.schema).to.have.property('name');
-                        expect(read_schema.schema['name']).to.equal(typename);
-                        done();
-                    }
+                readSchema(typename, done, (response) => {
+                    expect(response).to.not.have.property('error');
+                    let schema = response.schema;
+                    expect(schema).to.have.property('name');
+                    expect(schema['name']).to.equal(typename);
+                });
+            });
+
+
+            it('should return an error when the request is missing the typename', function(done) {
+                let typename;
+                readSchema(typename, done, (response) => {
+                    expect(response).to.not.have.property('schema');
+                    expect(response.error).to.equal('expected msg.typename');
+                });
+            });
+
+
+            it('should return an error when the typename doesnt reference a schema', function(done) {
+                let typename = 'Unicorn';
+                readSchema(typename, done, (response) => {
+                    expect(response).to.not.have.property('schema');
+                    expect(response.error).to.equal('no schema for typename=Unicorn');
                 });
             });
 

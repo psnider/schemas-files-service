@@ -35,14 +35,16 @@ function schemas(options) {
     }
     this.add('role:schemas,action:read', function (msg, respond) {
         if (!('typename' in msg)) {
-            respond(new Error('expected msg.typename'));
-        }
-        var schema = schema_files.test.getLoadedSchema(msg.typename);
-        if (schema) {
-            respond(null, { schema: schema });
+            respond(null, { error: 'expected msg.typename' });
         }
         else {
-            respond(null, { error: 'no schema for typename=' + msg.typename });
+            var schema = schema_files.test.getLoadedSchema(msg.typename);
+            if (schema) {
+                respond(null, { schema: schema });
+            }
+            else {
+                respond(null, { error: 'no schema for typename=' + msg.typename });
+            }
         }
     });
 }

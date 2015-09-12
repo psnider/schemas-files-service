@@ -6,50 +6,68 @@
 var CHAI = require('chai');
 var expect = CHAI.expect;
 describe('schemas-service', function () {
+    var seneca;
+    before(function (done) {
+        //draftV4Pathname
+        seneca = require('seneca')({
+            log: 'silent',
+            default_plugins: {
+                'mem-store': false
+            },
+            schemas: {
+                schemasDir: 'test/data/schemas'
+            }
+        });
+        var schemas_plugin = require('schemas-plugin');
+        seneca.use(schemas_plugin);
+        seneca.error(function (error) {
+            done(error);
+        });
+        done();
+    });
     describe('schemas-plugin', function () {
-        var seneca;
-        function readSchema(typename, done) {
+        function readSchema(typename, done, tests) {
             var read_msg = {
                 action: 'read',
-                typename: typename
+                role: 'schemas'
             };
-            read_msg['role'] = 'schemas';
-            seneca.act(read_msg, function (error, read_schema) {
+            if (typename)
+                read_msg['typename'] = typename;
+            //console.log('read_msg=' + JSON.stringify(read_msg))
+            seneca.act(read_msg, function (error, response) {
                 //console.log('read_schema='+JSON.stringify(read_schema))
-                done(error, read_schema);
-            });
-        }
-        beforeEach(function (done) {
-            //draftV4Pathname
-            seneca = require('seneca')({
-                log: 'silent',
-                default_plugins: {
-                    'mem-store': false
-                },
-                schemas: {
-                    schemasDir: 'test/data/schemas'
+                if (error) {
+                    done(error);
+                }
+                else {
+                    //console.log('response=' + JSON.stringify(response))
+                    tests(response);
+                    done();
                 }
             });
-            var schemas_plugin = require('schemas-plugin');
-            seneca.use(schemas_plugin);
-            seneca.error(function (error) {
-                done(error);
-            });
-            done();
-        });
+        }
         describe('action:read', function () {
-            it('+ should read a schema', function (done) {
+            it('should return a schema when the typename references a cached schema', function (done) {
                 var typename = 'SHA1';
-                readSchema(typename, function (error, read_schema) {
-                    if (error) {
-                        done(error);
-                    }
-                    else {
-                        console.log('read_schema=' + JSON.stringify(read_schema));
-                        expect(read_schema.schema).to.have.property('name');
-                        expect(read_schema.schema['name']).to.equal(typename);
-                        done();
-                    }
+                readSchema(typename, done, function (response) {
+                    expect(response).to.not.have.property('error');
+                    var schema = response.schema;
+                    expect(schema).to.have.property('name');
+                    expect(schema['name']).to.equal(typename);
+                });
+            });
+            it('should return an error when the request is missing the typename', function (done) {
+                var typename;
+                readSchema(typename, done, function (response) {
+                    expect(response).to.not.have.property('schema');
+                    expect(response.error).to.equal('expected msg.typename');
+                });
+            });
+            it('should return an error when the typename doesnt reference a schema', function (done) {
+                var typename = 'Unicorn';
+                readSchema(typename, done, function (response) {
+                    expect(response).to.not.have.property('schema');
+                    expect(response.error).to.equal('no schema for typename=Unicorn');
                 });
             });
         });

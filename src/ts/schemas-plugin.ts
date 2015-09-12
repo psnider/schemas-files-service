@@ -45,13 +45,14 @@ function schemas( options: SchemasPlugin.Options ) {
 
     this.add( 'role:schemas,action:read', (msg : SchemasProtocol.SchemasRequest, respond) => {
         if (!('typename' in msg)) {
-            respond(new Error('expected msg.typename'));
-        }
-        let schema = schema_files.test.getLoadedSchema(msg.typename);
-        if (schema) {
-            respond(null, {schema});
+            respond(null, {error: 'expected msg.typename'});
         } else {
-            respond(null, {error: 'no schema for typename=' + msg.typename});
+            let schema = schema_files.test.getLoadedSchema(msg.typename);
+            if (schema) {
+                respond(null, {schema});
+            } else {
+                respond(null, {error: 'no schema for typename=' + msg.typename});
+            }
         }
     })
 

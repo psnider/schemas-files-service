@@ -40,8 +40,8 @@
         "./typings/es6-promise/es6-promise.d.ts",
         "./typings/mocha/mocha.d.ts",
         "./typings/node/node.d.ts",
-        "./typings/schemas-service/schemas-plugin.d.ts",
-        "./typings/schemas-service/schemas-protocol.d.ts",
+        "./typings/schemas-files-service/schemas-plugin.d.ts",
+        "./typings/schemas-files-service/schemas-protocol.d.ts",
         "./typings/tv4-via-typenames-node/tv4-via-typenames-node.d.ts",
         "./typings/tv4-via-typenames/tv4-via-typenames.d.ts",
         "./typings/tv4/tv4.d.ts"

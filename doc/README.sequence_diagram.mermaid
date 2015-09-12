@@ -1,0 +1,14 @@
+# http://knsv.github.io/mermaid/live_editor/
+
+sequenceDiagram
+    participant User
+    participant Web Schema service
+    participant JSON Schema service
+    participant other service
+User->> Web Schema service: REST w/typename
+# comment
+Web Schema service->> JSON Schema service: JSON w/typename
+JSON Schema service->> Web Schema service: JSON w/Schema
+Web Schema service->> User: Forward response
+other service->> JSON Schema service: JSON w/typename
+JSON Schema service->> other service: JSON w/Schema
