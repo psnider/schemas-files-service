@@ -15,12 +15,10 @@ This takes a REST request, and passes a JSON request to the schemas service
 **A sequence diagram showing how this fits into a system:**
 ![Sequence Diagram](doc/sequence_diagram.jpg)
 
-## Install
+## Setup for Build
 ```
-npm install schemas-files-service
 make setup
 ```
-
 
 ## Build
 ```
@@ -48,7 +46,8 @@ And in another command shell, run:
 node schemas-app.js --seneca.log=plugin:web,plugin:api
 ```
 
-Then from a browser, issue these queries that should return a schema:
+Using a browser that can display JSON (I use the [JSONView Chrome extension](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en)),
+Issue these queries that should return a schema:
 
 - [http://localhost:3000/api/schemas?typename=SHA1](http://localhost:3000/api/schemas?typename=SHA1)
 - [http://localhost:3000/api/schemas?typename=Draft-04](http://localhost:3000/api/schemas?typename=Draft-04)

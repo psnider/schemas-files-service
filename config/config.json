@@ -1,5 +1,4 @@
 {
-    "port": 3001,
     "schemas": {
         "schemasDir": "./test/data/schemas"
     }
