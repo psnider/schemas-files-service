@@ -55,6 +55,7 @@ test_commonjs_filenames = $(addprefix commonjs/, $(test_output_basenames))
 
 build-tests: $(test_commonjs_filenames)
 
+.PHONY: test
 test: $(test_commonjs_filenames)
 	./kill1 debug-brk
 	mocha $(MOCHA_ARGS) -R spec $(test_commonjs_filenames)
