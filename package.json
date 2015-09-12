@@ -1,6 +1,6 @@
 {
   "name": "schemas-files-service",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A seneca-based micro-service for JSON schema.",
   "keywords": [
     "tv4",
