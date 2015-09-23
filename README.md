@@ -1,4 +1,6 @@
 # A JSON Schemas Micro-Service based on Seneca
+[![NPM version](http://img.shields.io/npm/v/schemas-files-service.svg)](https://www.npmjs.org/package/schemas-files-service)
+[![Dependencies](https://david-dm.org/psnider/schemas-files-service.svg)](https://www.npmjs.org/package/schemas-files-service)
 
 This provides a simple service that returns the JSON schema for a given typename.
 
